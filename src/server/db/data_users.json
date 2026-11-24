@@ -1,0 +1,37 @@
+[
+  {
+    "_id": "6ae8cd520bc15b5f982f2aa2",
+    "email": "admin@darkvence.com",
+    "createdAt": "2026-11-01T12:26:42.256Z",
+    "id": "usr_darkvence_admin_1",
+    "name": "Darkvence Principal",
+    "passwordHash": "$2b$10$VHzFXwJkPL/P9d9CbhhMYuxXmPsf29O02AkiNn.PpjEzzMaeokfai",
+    "role": "superadmin"
+  },
+  {
+    "_id": "6ae8cd520bc15b5f982f2aa3",
+    "email": "sarah@cyberdyne.dev",
+    "createdAt": "2026-11-01T12:26:42.336Z",
+    "id": "usr_1793536002336",
+    "name": "Sarah Connor",
+    "passwordHash": "$2b$10$aWC9EnNjn.EaGfD.K3EBkO5t..qonRMjaP04ivRG7hpQX3eYSU2.a",
+    "role": "superadmin"
+  },
+  {
+    "_id": "6ae8cd7a5aa5de862cc4485e",
+    "id": "usr_1793641850212",
+    "name": "Dev Admin",
+    "email": "devadmin@darkvence.com",
+    "passwordHash": "$2b$10$RxAAF/tQEQA2PSJObYCcLOIOc4gmsf8C5ZoJFrnh119u9gZNLXcmq",
+    "role": "superadmin",
+    "createdAt": "2026-11-02T17:50:50.212Z"
+  },
+  {
+    "id": "usr_1793641924685",
+    "name": "Lead Architect",
+    "email": "architect@darkvence.com",
+    "passwordHash": "$2b$10$xFnHZ2u/cAOeypomGWLPx.wVCPONfEUnzvjdJ2f8Ad75LqQi/OIyW",
+    "role": "superadmin",
+    "createdAt": "2026-11-02T17:52:04.685Z"
+  }
+]

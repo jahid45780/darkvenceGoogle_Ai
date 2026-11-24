@@ -1,0 +1,195 @@
+{
+  "hero": {
+    "heading": "Where Technical Precision Meets Conversion Design",
+    "subtitle": "Digital Systems & Engineering",
+    "description": "Darkvence operates as an embedded technical partner for technology founders, scaling e-commerce brands, and forward-thinking enterprises. We reject fragile disposable templates, instead engineering custom digital platforms with sub-second speeds and resilient architectures.",
+    "image": "/src/assets/images/hero_darkvence_digital_1790497052243.jpg",
+    "ctaText": "Work With Our Team",
+    "ctaUrl": "contact"
+  },
+  "company": {
+    "name": "DARKVENCE",
+    "intro": "Engineering Digital Dominance & High-Velocity Software Systems",
+    "description": "We reject the traditional agency churn of disposable websites, fragile templates, and unmeasured ad vanity metrics. We operate as an embedded technical partner, building modular software architectures and performance funnels designed to withstand scale.",
+    "logoUrl": "/assets/aistudio/image_a9a3bddd.png",
+    "mission": "To eliminate digital mediocrity by merging rigorous software engineering with conversion-focused design and measurable performance marketing.",
+    "vision": "To architect resilient, high-speed digital foundations that give ambitious companies an enduring competitive advantage.",
+    "yearEstablished": "2021",
+    "values": [
+      {
+        "id": "val_1",
+        "title": "Sub-Second Speed",
+        "description": "Every millisecond of latency is lost revenue. We optimize assets, code paths, and cache tiers relentlessly."
+      },
+      {
+        "id": "val_2",
+        "title": "Aesthetic Restraint",
+        "description": "We ban generic templates and empty decorations in favor of deliberate typography, purposeful whitespace, and crisp micro-interactions."
+      },
+      {
+        "id": "val_3",
+        "title": "Radical Transparency",
+        "description": "Clean git commits, transparent sprints, open architectural decisions, and zero vendor lock-in."
+      },
+      {
+        "id": "val_4",
+        "title": "Quantified Outcomes",
+        "description": "Code without business impact is an indulgence. Every project is measured against customer acquisition, retention, and conversion."
+      }
+    ],
+    "stats": [
+      {
+        "id": "stat_1",
+        "value": "99.9%",
+        "label": "Production Uptime Standard",
+        "suffix": ""
+      },
+      {
+        "id": "stat_2",
+        "value": "< 700",
+        "label": "Average Core Web Vitals FCP",
+        "suffix": "ms"
+      },
+      {
+        "id": "stat_3",
+        "value": "4.2x",
+        "label": "Client Pipeline Growth Multiple",
+        "suffix": ""
+      },
+      {
+        "id": "stat_4",
+        "value": "$45M+",
+        "label": "Client Revenue Transacted",
+        "suffix": ""
+      }
+    ]
+  },
+  "teamMembers": [
+    {
+      "id": "tm_jahid",
+      "name": "Jahid Hossain",
+      "role": "Senior Executive / Full Stack Developer",
+      "company": "DARKVENCE",
+      "avatarUrl": "/src/assets/images/hero_darkvence_digital_1790497052243.jpg",
+      "bio": "Directs full-stack architecture, high-performance web systems, and cloud infrastructure pipelines at DARKVENCE.",
+      "linkedin": "https://linkedin.com",
+      "portfolio": "https://darkvence.com",
+      "order": 1,
+      "isActive": true
+    },
+    {
+      "id": "tm_julian",
+      "name": "Julian Vance",
+      "role": "Principal Systems Architect",
+      "company": "DARKVENCE",
+      "avatarUrl": "/src/assets/images/project_fintech_platform_1790497066827.jpg",
+      "bio": "Over 12 years engineering distributed systems, edge architectures, and high-conversion digital experiences for venture-backed tech companies.",
+      "linkedin": "https://linkedin.com",
+      "portfolio": "https://darkvence.com",
+      "order": 2,
+      "isActive": true
+    },
+    {
+      "id": "tm_elena",
+      "name": "Elena Rostova",
+      "role": "Head of Product & Design Engineering",
+      "company": "DARKVENCE",
+      "avatarUrl": "/src/assets/images/project_mobile_lifestyle_1790497087881.jpg",
+      "bio": "Specialist in user interface systems, accessible interaction patterns, and conversion funnel optimization.",
+      "linkedin": "https://linkedin.com",
+      "portfolio": "https://darkvence.com",
+      "order": 3,
+      "isActive": true
+    }
+  ],
+  "sectionsVisibility": {
+    "showJourney": true,
+    "showServices": true,
+    "showTechStack": true,
+    "showWhyChooseUs": true,
+    "showTestimonials": true
+  },
+  "journey": [
+    {
+      "id": "j_1",
+      "year": "2021",
+      "title": "Studio Inception",
+      "description": "Founded with a core focus on eliminating bloated agency templates and engineering sub-second web applications."
+    },
+    {
+      "id": "j_2",
+      "year": "2023",
+      "title": "Full-Stack Expansion",
+      "description": "Scaled our engineering capabilities into headless e-commerce, cloud microservices, and reactive SaaS applications."
+    },
+    {
+      "id": "j_3",
+      "year": "2025",
+      "title": "Attribution & Tracking Engine",
+      "description": "Introduced server-side analytics, Meta CAPI pipelines, and precision performance marketing integration."
+    },
+    {
+      "id": "j_4",
+      "year": "2026",
+      "title": "Global Multi-Platform Delivery",
+      "description": "Trusted engineering partner delivering mission-critical applications across web, mobile, and enterprise cloud."
+    }
+  ],
+  "techStack": [
+    {
+      "id": "ts_1",
+      "category": "Frontend & Reactive UI",
+      "items": [
+        "React 19",
+        "Next.js 15",
+        "TypeScript",
+        "Tailwind CSS",
+        "Vite",
+        "Motion"
+      ]
+    },
+    {
+      "id": "ts_2",
+      "category": "Backend & Cloud Infrastructure",
+      "items": [
+        "Node.js",
+        "Express",
+        "PostgreSQL",
+        "Redis",
+        "Docker",
+        "REST / GraphQL"
+      ]
+    },
+    {
+      "id": "ts_3",
+      "category": "Performance & Tracking",
+      "items": [
+        "Core Web Vitals Optimization",
+        "Meta CAPI",
+        "GA4 Server Routing",
+        "Edge Caching"
+      ]
+    }
+  ],
+  "whyChooseUs": [
+    {
+      "id": "wcu_1",
+      "title": "Sub-Second Performance",
+      "description": "Zero bloated theme templates. Every line of code is tailored for maximum computational efficiency and instant page transitions.",
+      "metric": "<700ms FCP"
+    },
+    {
+      "id": "wcu_2",
+      "title": "Total Code Ownership",
+      "description": "You own 100% of your codebase, repositories, assets, and deployment infrastructure. Never get locked into proprietary agency engines.",
+      "metric": "100% IP"
+    },
+    {
+      "id": "wcu_3",
+      "title": "Direct Architect Communication",
+      "description": "Work directly with senior full-stack developers and systems engineers without layers of non-technical account managers.",
+      "metric": "Direct Access"
+    }
+  ],
+  "updatedAt": "2026-11-24T10:27:10.100Z"
+}

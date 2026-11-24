@@ -1,0 +1,417 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --color-brand-lime: #B6FF2B;
+  --color-brand-lime-hover: #9FE61A;
+  --color-brand-dark-bg: #000000;
+  --color-brand-dark-surface: #0F0F0F;
+  --color-brand-dark-elevated: #161616;
+  --color-brand-dark-border: #232323;
+  --color-brand-dark-text: #FFFFFF;
+  --color-brand-dark-muted: #A1A1A1;
+  --color-brand-light-bg: #FFFFFF;
+  --color-brand-light-surface: #F5F5F5;
+  --color-brand-light-elevated: #EBEBEB;
+  --color-brand-light-border: #E5E5E5;
+  --color-brand-light-text: #0A0A0A;
+  --color-brand-light-muted: #5C5C5C;
+}
+
+@layer base {
+  :root {
+    --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Design Tokens */
+    --accent: #B6FF2B;
+    --accent-hover: #9FE61A;
+    --accent-glow: rgba(182, 255, 43, 0.15);
+
+    --bg-page: #FFFFFF;
+    --surface: #F5F5F5;
+    --surface-elevated: #EBEBEB;
+    --border: #E5E5E5;
+    --text-primary: #0A0A0A;
+    --text-muted: #5C5C5C;
+
+    --card-bg: #F5F5F5;
+    --card-border: #E5E5E5;
+  }
+
+  html.dark {
+    --bg-page: #000000;
+    --surface: #0F0F0F;
+    --surface-elevated: #161616;
+    --border: #232323;
+    --text-primary: #FFFFFF;
+    --text-muted: #A1A1A1;
+
+    --card-bg: #0F0F0F;
+    --card-border: #232323;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 400;
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Universal typography defaults */
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: var(--font-display);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  p {
+    max-width: 65ch;
+  }
+
+  button, .btn {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  input, textarea, select {
+    font-family: var(--font-body);
+    font-size: 1rem;
+  }
+
+  .font-mono-tabular {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Explicit Typographic Utilities */
+.font-display {
+  font-family: var(--font-display);
+}
+.font-body {
+  font-family: var(--font-body);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.hero-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.lead-text {
+  font-family: var(--font-body);
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  max-width: 65ch;
+}
+
+.body-text {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 400;
+  max-width: 65ch;
+}
+
+.btn-typography {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.nav-link-typography {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.tag-mono {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem; /* 13px */
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* Custom Scrollbars in strict brand theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #232323;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B6FF2B;
+}
+
+html.light ::-webkit-scrollbar-track {
+  background: #FFFFFF;
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: #E5E5E5;
+  border-radius: 4px;
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #9FE61A;
+}
+
+/* Brand Glows using strictly Lime Green #B6FF2B */
+.bg-radial-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(182, 255, 43, 0.12) 0%, rgba(182, 255, 43, 0.03) 35%, transparent 70%);
+}
+
+html.light .bg-radial-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(182, 255, 43, 0.14) 0%, rgba(182, 255, 43, 0.04) 35%, transparent 70%);
+}
+
+.bg-radial-subtle {
+  background: radial-gradient(circle at 80% 20%, rgba(182, 255, 43, 0.08) 0%, transparent 50%);
+}
+
+/* Card 3D Depth Utilities */
+.card-3d {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  transform: translateZ(0);
+}
+.card-3d:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 32px -12px rgba(182, 255, 43, 0.15);
+  border-color: rgba(182, 255, 43, 0.35);
+}
+
+html.light .card-3d:hover {
+  box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.08);
+  border-color: #B6FF2B;
+}
+
+/* Dimensional Icon Badges */
+.dimensional-icon {
+  background: #161616;
+  border: 1px solid #232323;
+  box-shadow: 0 6px 14px -3px rgba(0, 0, 0, 0.6);
+  transition: all 0.25s ease;
+}
+.dimensional-icon:hover {
+  border-color: #B6FF2B;
+  box-shadow: 0 8px 20px -4px rgba(182, 255, 43, 0.25);
+  transform: translateY(-1px);
+}
+
+html.light .dimensional-icon {
+  background: #F5F5F5;
+  border: 1px solid #E5E5E5;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+}
+html.light .dimensional-icon:hover {
+  border-color: #B6FF2B;
+  box-shadow: 0 6px 16px -3px rgba(182, 255, 43, 0.2);
+}
+
+/* Entrance Animations */
+@keyframes logoEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-logo-entrance {
+  animation: logoEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes logoEmblemGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(182, 255, 43, 0);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(182, 255, 43, 0.35);
+  }
+  100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.animate-emblem-entrance {
+  animation: logoEmblemGlow 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Light Theme Strict Surface Overrides */
+html.light {
+  color-scheme: light;
+}
+
+html.light .bg-\[\#000000\],
+html.light .bg-\[\#040508\],
+html.light .bg-\[\#05060A\],
+html.light .bg-\[\#06070c\],
+html.light .bg-\[\#07080D\],
+html.light .bg-\[\#08090d\],
+html.light .bg-\[\#090a0f\],
+html.light .bg-\[\#090b10\],
+html.light .bg-\[\#090b14\],
+html.light .bg-\[\#0c0d14\],
+html.light .bg-\[\#0c0e15\],
+html.light .bg-\[\#0e1017\],
+html.light .bg-\[\#10121a\],
+html.light .bg-\[\#10131f\] {
+  background-color: #FFFFFF;
+  border-color: #E5E5E5;
+}
+
+html.light .bg-\[\#0F0F0F\],
+html.light .bg-\[\#161616\] {
+  background-color: #F5F5F5;
+  border-color: #E5E5E5;
+}
+
+html.light .border-\[\#232323\] {
+  border-color: #E5E5E5;
+}
+
+html.light .text-\[\#A1A1A1\] {
+  color: #5C5C5C;
+}
+
+html.light .text-\[\#FFFFFF\] {
+  color: #0A0A0A;
+}
+
+/* Clean Input Styling */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #B6FF2B !important;
+  box-shadow: 0 0 0 2px rgba(182, 255, 43, 0.25) !important;
+}
+
+/* Shape Language: Rounded-Triangle SVG Utility */
+.triangle-bullet {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #B6FF2B;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  border-radius: 2px;
+}
+
+/* Trusted Brands Infinite Right-to-Left Marquee */
+@keyframes darkvence-marquee-rtl {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.trusted-marquee-viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000000 5%,
+    #000000 95%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000000 5%,
+    #000000 95%,
+    transparent 100%
+  );
+}
+
+.animate-trusted-marquee {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation-name: darkvence-marquee-rtl;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.trusted-marquee-viewport:hover .animate-trusted-marquee,
+.trusted-marquee-viewport:focus-within .animate-trusted-marquee {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-trusted-marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+  .trusted-marquee-viewport {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+

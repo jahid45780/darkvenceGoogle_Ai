@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Darkvence — Premium Digital Agency &amp; CMS</title>
+    <link rel="icon" type="image/png" href="/assets/aistudio/image_a9a3bddd.png" />
+    <link rel="apple-touch-icon" href="/assets/aistudio/image_a9a3bddd.png" />
+    <meta name="description" content="Darkvence is a premium digital agency engineering modern websites, mobile apps, custom software, and high-performance digital marketing campaigns." />
+    <meta property="og:title" content="Darkvence — Premium Digital Agency &amp; CMS" />
+    <meta property="og:description" content="Darkvence is a premium digital agency engineering modern websites, mobile apps, custom software, and high-performance digital marketing campaigns." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <script>
+      (function() {
+        try {
+          const stored = localStorage.getItem('darkvence_theme');
+          const root = document.documentElement;
+          let theme = stored;
+          if (!theme || (theme !== 'light' && theme !== 'dark')) {
+            theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          }
+          if (theme === 'light') {
+            root.classList.remove('dark');
+            root.classList.add('light');
+            root.setAttribute('data-theme', 'light');
+            root.style.colorScheme = 'light';
+          } else {
+            root.classList.add('dark');
+            root.classList.remove('light');
+            root.setAttribute('data-theme', 'dark');
+            root.style.colorScheme = 'dark';
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-white text-[#0A0A0A] dark:bg-[#000000] dark:text-[#FFFFFF] antialiased selection:bg-[#B6FF2B] selection:text-black min-h-screen transition-colors duration-200">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
