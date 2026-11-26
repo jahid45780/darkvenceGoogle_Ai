@@ -137,6 +137,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings, onNavigate }
           />
         )}
 
+        {/* Subtle cinematic architectural rings behind 3D showcase (Desktop) */}
+        <div
+          aria-hidden="true"
+          className="hidden lg:block absolute top-1/2 right-[8%] -translate-y-1/2 w-[540px] h-[540px] rounded-full border border-black/[0.04] dark:border-[#B6FF2B]/[0.08] pointer-events-none"
+        />
+        <div
+          aria-hidden="true"
+          className="hidden lg:block absolute top-1/2 right-[12%] -translate-y-1/2 w-[420px] h-[420px] rounded-full border border-dashed border-black/[0.04] dark:border-white/[0.05] pointer-events-none"
+        />
+
         {/* Floating Decorative Rounded Triangles echoing brand logo */}
         <div className="absolute top-24 right-16 hidden xl:block opacity-25 pointer-events-none">
           <BrandTriangle size={48} color="#B6FF2B" stroke />
@@ -152,9 +162,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings, onNavigate }
       {/* ========================================================================= */}
       {/* 2. HERO CONTENT & TYPOGRAPHY + RIGHT-SIDE 3D WORKSPACE                    */}
       {/* ========================================================================= */}
-      <div className="relative z-10 w-full max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-14 sm:py-20 lg:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-10 items-center">
-          <div className="lg:col-span-7 max-w-3xl space-y-6 sm:space-y-8">
+      <div className="relative z-10 w-full max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-12 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 xl:gap-10 items-center">
+          <div className="lg:col-span-6 max-w-2xl space-y-6 sm:space-y-8">
           {/* Eyebrow Label with Brand Triangle */}
           <motion.div
             {...fadeInUp(0.1)}
@@ -232,7 +242,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings, onNavigate }
             className="text-base sm:text-lg md:text-[1.1875rem] text-[#5C5C5C] dark:text-[#A1A1A1] max-w-[65ch] font-normal leading-[1.65] font-body text-pretty"
           >
             {settings?.heroSubtitle ||
-              'We build high-performance websites, custom software, and digital experiences that help ambitious businesses grow.'}
+              'Darkvence is a premier digital agency building bespoke websites, mobile applications, headless CMS platforms, and precision performance advertising engines for ambitious brands.'}
           </motion.p>
 
           {/* Dual CTA Buttons: Primary Lime + Black text, Secondary outline (white border in dark, black in light) */}
@@ -283,7 +293,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings, onNavigate }
             initial={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: shouldReduceMotion ? 0 : 0.25, ease: 'easeOut' as const }}
-            className="lg:col-span-5 w-full min-w-0"
+            className="lg:col-span-6 w-full min-w-0"
           >
             <Hero3DWorkspace
               parallaxRef={parallaxRef}

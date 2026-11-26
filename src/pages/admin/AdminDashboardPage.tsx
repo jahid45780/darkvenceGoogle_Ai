@@ -8,7 +8,8 @@ import {
   Clock,
   ArrowUpRight,
   Quote,
-  Building2
+  Building2,
+  BarChart3
 } from 'lucide-react';
 import { AnalyticsOverview } from '../../types/index.ts';
 import { BrandTriangle } from '../../components/ui/BrandTriangle.tsx';
@@ -16,7 +17,7 @@ import { BrandTriangle } from '../../components/ui/BrandTriangle.tsx';
 interface AdminDashboardPageProps {
   analytics: AnalyticsOverview | null;
   onNavigateTab: (
-    tab: 'overview' | 'services' | 'projects' | 'trusted-brands' | 'testimonials' | 'blog' | 'inquiries' | 'settings'
+    tab: 'overview' | 'services' | 'projects' | 'trusted-brands' | 'statistics' | 'testimonials' | 'blog' | 'inquiries' | 'settings'
   ) => void;
 }
 
@@ -282,6 +283,17 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
               <div className="flex items-center gap-2.5">
                 <Building2 className="w-4 h-4 text-[#B6FF2B]" />
                 <span className="text-xs font-semibold text-white">Manage Trusted Brands</span>
+              </div>
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#A1A1A1]" />
+            </button>
+
+            <button
+              onClick={() => onNavigateTab('statistics')}
+              className="w-full p-3 rounded-xl bg-[#161616] border border-[#232323] hover:border-[#B6FF2B] text-left flex items-center justify-between transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-2.5">
+                <BarChart3 className="w-4 h-4 text-[#B6FF2B]" />
+                <span className="text-xs font-semibold text-white">Manage Statistics</span>
               </div>
               <ArrowUpRight className="w-3.5 h-3.5 text-[#A1A1A1]" />
             </button>

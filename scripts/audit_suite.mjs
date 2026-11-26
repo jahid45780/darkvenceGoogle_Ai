@@ -88,7 +88,9 @@ async function runAudit() {
     ['Settings', '/api/v1/settings'],
     ['About CMS', '/api/v1/about'],
     ['Testimonials', '/api/v1/testimonials'],
-    ['Trusted Brands', '/api/v1/trusted-brands']
+    ['Trusted Brands', '/api/v1/trusted-brands'],
+    ['Statistics', '/api/v1/statistics'],
+    ['Statistics Public Alias', '/api/v1/statistics/public']
   ];
 
   for (const [name, ep] of publicEndpoints) {
@@ -383,6 +385,92 @@ async function runAudit() {
       } catch (cleanupErr) {
         record('Trusted Brands Admin Delete Cleanup (DELETE)', false, cleanupErr.message);
       }
+    }
+  }
+
+  // 8d. Dynamic Statistics CMS CRUD, Auth, Validation, Visibility & Reorder (with cleanup)
+  let createdStatId = '';
+  let originalStatOrderIds = [];
+  try {
+    const unauthStats = await request('GET', '/api/v1/admin/statistics');
+    record('Statistics Admin Route Without Token (401)', unauthStats.statusCode === 401, `Status: ${unauthStats.statusCode}`);
+
+    const unauthPostStat = await request('POST', '/api/v1/statistics', {
+      value: '100',
+      title: 'Unauthorized Test'
+    });
+    record('Statistics Public POST Blocked Without Token (401)', unauthPostStat.statusCode === 401, `Status: ${unauthPostStat.statusCode}`);
+
+    const adminStatsRes = await request('GET', '/api/v1/admin/statistics', null, authHeaders);
+    const initialStats = Array.isArray(adminStatsRes.body?.data) ? adminStatsRes.body.data : [];
+    originalStatOrderIds = initialStats.map((s) => s.id);
+    record(
+      'Statistics Admin Fetch & Initial Seed (4 Baseline Metrics)',
+      adminStatsRes.statusCode === 200 && initialStats.length >= 4,
+      `Statistics: ${initialStats.length}`
+    );
+
+    const invalidStat = await request('POST', '/api/v1/admin/statistics', {
+      value: '',
+      title: 'A'
+    }, authHeaders);
+    record('Statistics Invalid Payload Rejection (400)', invalidStat.statusCode === 400, `Status: ${invalidStat.statusCode}`);
+
+    const invalidStatId = await request('GET', '/api/v1/admin/statistics/bad$id!', null, authHeaders);
+    record('Statistics Invalid ID Rejection (400)', invalidStatId.statusCode === 400, `Status: ${invalidStatId.statusCode}`);
+
+    const createStatRes = await request('POST', '/api/v1/admin/statistics', {
+      prefix: '+',
+      value: '310',
+      suffix: '%',
+      title: 'Audit Conversion Lift',
+      description: 'Verification metric created during automated audit.',
+      order: 99,
+      isPublished: true
+    }, authHeaders);
+    createdStatId = createStatRes.body?.data?.id || '';
+    record('Statistics Admin Create (POST /api/v1/admin/statistics)', createStatRes.statusCode === 201 && Boolean(createdStatId), `Created ID: ${createdStatId}`);
+
+    if (createdStatId) {
+      const pubStats = await request('GET', '/api/v1/statistics');
+      const foundPublic = Array.isArray(pubStats.body?.data) && pubStats.body.data.some((s) => s.id === createdStatId);
+      record('Statistics Public Shows Published Item', pubStats.statusCode === 200 && foundPublic, foundPublic ? 'Visible publicly' : 'Missing from public feed');
+
+      const hideRes = await request('PATCH', `/api/v1/admin/statistics/${createdStatId}`, { isPublished: false }, authHeaders);
+      const pubAfterHide = await request('GET', '/api/v1/statistics');
+      const hiddenPublic = Array.isArray(pubAfterHide.body?.data) && !pubAfterHide.body.data.some((s) => s.id === createdStatId);
+      record('Statistics Unpublish Hides From Public API', hideRes.statusCode === 200 && hiddenPublic, 'Hidden from public feed');
+
+      const updateRes = await request('PATCH', `/api/v1/admin/statistics/${createdStatId}`, {
+        value: '325',
+        title: 'Audit Verified Conversion Lift',
+        isPublished: true
+      }, authHeaders);
+      record('Statistics Admin Update (PATCH)', updateRes.statusCode === 200 && updateRes.body?.data?.value === '325', `Updated value: ${updateRes.body?.data?.value}`);
+
+      if (originalStatOrderIds.length > 0) {
+        const reorderedIds = [createdStatId, ...originalStatOrderIds];
+        const reorderRes = await request('PATCH', '/api/v1/admin/statistics/reorder', { orderedIds: reorderedIds }, authHeaders);
+        const pubReordered = await request('GET', '/api/v1/statistics');
+        const firstId = Array.isArray(pubReordered.body?.data) ? pubReordered.body.data[0]?.id : '';
+        record('Statistics Reorder Persists Order', reorderRes.statusCode === 200 && firstId === createdStatId, `First public ID: ${firstId}`);
+      }
+    }
+  } catch (err) {
+    record('Statistics Lifecycle Check', false, err.message);
+  } finally {
+    if (createdStatId) {
+      try {
+        const delStatRes = await request('DELETE', `/api/v1/admin/statistics/${createdStatId}`, null, authHeaders);
+        record('Statistics Admin Delete Cleanup (DELETE)', delStatRes.statusCode === 200, 'Cleaned up test statistic');
+      } catch (cleanupErr) {
+        record('Statistics Admin Delete Cleanup (DELETE)', false, cleanupErr.message);
+      }
+    }
+    if (originalStatOrderIds.length > 0) {
+      try {
+        await request('PATCH', '/api/v1/admin/statistics/reorder', { orderedIds: originalStatOrderIds }, authHeaders);
+      } catch {}
     }
   }
 

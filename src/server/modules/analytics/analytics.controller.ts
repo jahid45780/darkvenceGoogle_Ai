@@ -9,6 +9,7 @@ export const analyticsController = {
     const blogPosts = db.getBlogPosts(true);
     const testimonials = db.getTestimonials(true);
     const trustedBrands = db.getTrustedBrands(true);
+    const statistics = db.getStatistics(true);
 
     const totalInquiries = inquiries.length;
     const newInquiries = inquiries.filter(i => i.status === 'NEW').length;
@@ -47,7 +48,8 @@ export const analyticsController = {
           publishedProjects: projects.filter(p => p.status === 'published').length,
           publishedBlogPosts: blogPosts.filter(b => b.status === 'published').length,
           publishedTestimonials: testimonials.filter(t => t.isActive && t.isPublished).length,
-          publishedTrustedBrands: trustedBrands.filter(b => b.isActive && b.isPublished).length
+          publishedTrustedBrands: trustedBrands.filter(b => b.isActive && b.isPublished).length,
+          publishedStatistics: statistics.filter(s => s.isPublished).length
         },
         serviceDistribution: Object.entries(serviceDistribution).map(([name, count]) => ({
           service: name,

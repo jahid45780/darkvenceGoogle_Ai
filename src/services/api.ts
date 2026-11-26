@@ -16,7 +16,8 @@ import {
   Testimonial,
   TrustedBrand,
   TrustedBrandsSectionSettings,
-  TrustedBrandsPayload
+  TrustedBrandsPayload,
+  StatisticItem
 } from '../types/index.ts';
 
 
@@ -102,6 +103,10 @@ class ApiService {
 
   async getTrustedBrands(): Promise<TrustedBrandsPayload> {
     return this.request<TrustedBrandsPayload>('/trusted-brands');
+  }
+
+  async getPublicStatistics(): Promise<StatisticItem[]> {
+    return this.request<StatisticItem[]>('/statistics');
   }
 
   async getAdminAbout(): Promise<AboutPageData> {
@@ -322,6 +327,38 @@ class ApiService {
 
   async deleteTrustedBrand(id: string): Promise<{ success: boolean }> {
     return this.request<{ success: boolean }>(`/admin/trusted-brands/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  // Statistics Admin
+  async getAdminStatistics(): Promise<StatisticItem[]> {
+    return this.request<StatisticItem[]>('/admin/statistics');
+  }
+
+  async createStatistic(data: Partial<StatisticItem>): Promise<StatisticItem> {
+    return this.request<StatisticItem>('/admin/statistics', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async updateStatistic(id: string, data: Partial<StatisticItem>): Promise<StatisticItem> {
+    return this.request<StatisticItem>(`/admin/statistics/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async reorderStatistics(orderedIds: string[]): Promise<StatisticItem[]> {
+    return this.request<StatisticItem[]>('/admin/statistics/reorder', {
+      method: 'PATCH',
+      body: JSON.stringify({ orderedIds })
+    });
+  }
+
+  async deleteStatistic(id: string): Promise<{ success: boolean }> {
+    return this.request<{ success: boolean }>(`/admin/statistics/${id}`, {
       method: 'DELETE'
     });
   }

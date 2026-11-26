@@ -23,6 +23,12 @@ import {
   trustedBrandStatusSchema,
   trustedBrandSettingsSchema
 } from '../modules/trustedBrands/trustedBrands.controller.ts';
+import {
+  statisticsController,
+  statisticSchema,
+  statisticUpdateSchema,
+  statisticReorderSchema
+} from '../modules/statistics/statistics.controller.ts';
 import { analyticsController } from '../modules/analytics/analytics.controller.ts';
 import { uploadsController } from '../modules/uploads/uploads.controller.ts';
 import { db } from '../db/store.ts';
@@ -117,6 +123,15 @@ apiRouter.get('/testimonials', testimonialsController.getPublicTestimonials);
 // Trusted Brands (Public: active & published only, plus section settings)
 apiRouter.get('/trusted-brands', trustedBrandsController.getPublicTrustedBrands);
 
+// Statistics / Achievements (Public: published only, plus RESTful protected mutations)
+apiRouter.get('/statistics', statisticsController.getPublicStatistics);
+apiRouter.get('/statistics/public', statisticsController.getPublicStatistics);
+apiRouter.post('/statistics', requireAuth, requireAdminRole, validateRequest(statisticSchema), statisticsController.createStatistic);
+apiRouter.patch('/statistics/reorder', requireAuth, requireAdminRole, validateRequest(statisticReorderSchema), statisticsController.reorderStatistics);
+apiRouter.get('/statistics/:id', requireAuth, requireAdminRole, statisticsController.getAdminStatisticById);
+apiRouter.patch('/statistics/:id', requireAuth, requireAdminRole, validateRequest(statisticUpdateSchema), statisticsController.updateStatistic);
+apiRouter.delete('/statistics/:id', requireAuth, requireAdminRole, statisticsController.deleteStatistic);
+
 /* =========================================================================
    PROTECTED ADMIN ROUTES (/api/v1/admin/*)
    ========================================================================= */
@@ -175,6 +190,15 @@ adminRouter.put('/trusted-brands/:id', validateRequest(trustedBrandUpdateSchema)
 adminRouter.patch('/trusted-brands/:id', validateRequest(trustedBrandUpdateSchema), trustedBrandsController.updateBrand);
 adminRouter.patch('/trusted-brands/:id/status', validateRequest(trustedBrandStatusSchema), trustedBrandsController.updateBrandStatus);
 adminRouter.delete('/trusted-brands/:id', trustedBrandsController.deleteBrand);
+
+// Statistics CMS CRUD & Reorder (/reorder MUST precede /:id)
+adminRouter.get('/statistics', statisticsController.getAdminStatistics);
+adminRouter.patch('/statistics/reorder', validateRequest(statisticReorderSchema), statisticsController.reorderStatistics);
+adminRouter.get('/statistics/:id', statisticsController.getAdminStatisticById);
+adminRouter.post('/statistics', validateRequest(statisticSchema), statisticsController.createStatistic);
+adminRouter.put('/statistics/:id', validateRequest(statisticUpdateSchema), statisticsController.updateStatistic);
+adminRouter.patch('/statistics/:id', validateRequest(statisticUpdateSchema), statisticsController.updateStatistic);
+adminRouter.delete('/statistics/:id', statisticsController.deleteStatistic);
 
 // Settings CMS
 adminRouter.put('/settings', settingsController.updateSettings);

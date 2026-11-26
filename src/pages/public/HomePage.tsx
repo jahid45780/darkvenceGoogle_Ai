@@ -30,7 +30,8 @@ import {
   SiteSettings,
   Testimonial,
   TrustedBrand,
-  TrustedBrandsPayload
+  TrustedBrandsPayload,
+  StatisticItem
 } from '../../types/index.ts';
 import { HeroSection } from '../../components/home/HeroSection.tsx';
 import { BrandTriangle } from '../../components/ui/BrandTriangle.tsx';
@@ -47,6 +48,10 @@ interface HomePageProps {
   trustedBrandsLoading: boolean;
   trustedBrandsError: string | null;
   onRetryTrustedBrands?: () => void;
+  statistics: StatisticItem[];
+  statisticsLoading: boolean;
+  statisticsError: string | null;
+  onRetryStatistics?: () => void;
   onNavigate: (page: string, slug?: string) => void;
 }
 
@@ -146,6 +151,10 @@ export const HomePage: React.FC<HomePageProps> = ({
   trustedBrandsLoading,
   trustedBrandsError,
   onRetryTrustedBrands,
+  statistics,
+  statisticsLoading,
+  statisticsError,
+  onRetryStatistics,
   onNavigate
 }) => {
   const shouldReduceMotion = useReducedMotion();
@@ -475,28 +484,81 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 4. QUANTITATIVE BENCHMARKS */}
       <motion.section {...sectionAnimation} className="max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
         <div className="p-8 sm:p-12 rounded-3xl bg-[#F5F5F5] dark:bg-[#0F0F0F] border border-[#E5E5E5] dark:border-[#232323] shadow-sm relative overflow-hidden">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-[#E5E5E5] dark:divide-[#232323]">
-            {(settings?.metrics || [
-              { value: '99.9%', label: 'Production Uptime Standard', suffix: '' },
-              { value: '< 700', label: 'Average Core Web Vitals FCP', suffix: 'ms' },
-              { value: '4.2x', label: 'Client Pipeline Growth Multiple', suffix: '' },
-              { value: '$45M+', label: 'Client Revenue Transacted', suffix: '' }
-            ]).map((metric, idx) => (
-              <div key={idx} className="pt-4 md:pt-0 px-3 space-y-1">
-                <div className="text-3xl sm:text-5xl font-extrabold text-[#0A0A0A] dark:text-white tracking-tight font-mono-tabular">
-                  {metric.value}
-                  {metric.suffix && (
-                    <span className="text-xl sm:text-2xl text-[#B6FF2B] ml-1">
-                      {metric.suffix}
-                    </span>
-                  )}
+          {statisticsLoading ? (
+            <div
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
+              aria-busy="true"
+              aria-label="Loading statistics"
+            >
+              {[1, 2, 3, 4].map((n) => (
+                <div key={n} className="px-3 space-y-2.5 flex flex-col items-center">
+                  <div className="h-9 sm:h-11 w-28 rounded-xl bg-black/10 dark:bg-white/10 animate-pulse" />
+                  <div className="h-3.5 w-36 rounded bg-black/10 dark:bg-white/10 animate-pulse" />
                 </div>
-                <div className="text-xs text-[#5C5C5C] dark:text-[#A1A1A1] font-medium font-mono uppercase tracking-wider">
-                  {metric.label}
+              ))}
+            </div>
+          ) : statisticsError ? (
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-center py-2">
+              <p className="text-xs sm:text-sm text-[#5C5C5C] dark:text-[#A1A1A1] font-body">
+                {statisticsError}
+              </p>
+              {onRetryStatistics && (
+                <button
+                  type="button"
+                  onClick={onRetryStatistics}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#B6FF2B] hover:bg-[#9FE61A] text-black text-xs font-semibold font-display transition-colors cursor-pointer"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Retry</span>
+                </button>
+              )}
+            </div>
+          ) : statistics.length === 0 ? (
+            <div className="text-center py-3 space-y-1">
+              <p className="text-xs font-mono uppercase tracking-wider text-[#5C5C5C] dark:text-[#A1A1A1]">
+                No performance benchmarks published yet.
+              </p>
+            </div>
+          ) : (
+            (() => {
+              const orderedStats = [...statistics].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+              const gridColsClass =
+                orderedStats.length === 1
+                  ? 'grid-cols-1 max-w-md mx-auto'
+                  : orderedStats.length === 2
+                    ? 'grid-cols-1 sm:grid-cols-2'
+                    : orderedStats.length === 3
+                      ? 'grid-cols-1 sm:grid-cols-3'
+                      : 'grid-cols-2 md:grid-cols-4';
+              return (
+                <div
+                  className={`grid ${gridColsClass} gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-[#E5E5E5] dark:divide-[#232323]`}
+                >
+                  {orderedStats.map((metric) => (
+                    <div key={metric.id} className="pt-4 md:pt-0 px-3 space-y-1">
+                      <div className="text-3xl sm:text-5xl font-extrabold text-[#0A0A0A] dark:text-white tracking-tight font-mono-tabular">
+                        {metric.prefix && <span>{metric.prefix}</span>}
+                        <span>{metric.value}</span>
+                        {metric.suffix && (
+                          <span className="text-xl sm:text-2xl text-[#B6FF2B] ml-1">
+                            {metric.suffix}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs text-[#5C5C5C] dark:text-[#A1A1A1] font-medium font-mono uppercase tracking-wider">
+                        {metric.title}
+                      </div>
+                      {metric.description && (
+                        <p className="text-xs text-[#5C5C5C] dark:text-[#A1A1A1]/85 font-body leading-relaxed pt-0.5 max-w-[26ch] mx-auto">
+                          {metric.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              </div>
-            ))}
-          </div>
+              );
+            })()
+          )}
         </div>
       </motion.section>
 

@@ -16,7 +16,8 @@ import {
   Share2,
   Compass,
   Quote,
-  Building2
+  Building2,
+  BarChart3
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.tsx';
 import { BrandLogo } from '../../components/ui/BrandLogo.tsx';
@@ -28,6 +29,7 @@ export type AdminTab =
   | 'services'
   | 'projects'
   | 'trusted-brands'
+  | 'statistics'
   | 'testimonials'
   | 'blog'
   | 'media'
@@ -77,6 +79,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         { id: 'services', label: 'Services CMS', icon: <Layers className="w-4 h-4" /> },
         { id: 'projects', label: 'Portfolio CMS', icon: <FolderGit2 className="w-4 h-4" /> },
         { id: 'trusted-brands', label: 'Trusted Brands CMS', icon: <Building2 className="w-4 h-4" /> },
+        { id: 'statistics', label: 'Statistics CMS', icon: <BarChart3 className="w-4 h-4" /> },
         { id: 'testimonials', label: 'Testimonials CMS', icon: <Quote className="w-4 h-4" /> },
         { id: 'blog', label: 'Blog & Articles', icon: <FileText className="w-4 h-4" /> },
         { id: 'media', label: 'Media Library', icon: <ImageIcon className="w-4 h-4" /> }

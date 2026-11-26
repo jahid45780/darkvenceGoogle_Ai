@@ -247,6 +247,19 @@ export interface TrustedBrandsSectionSettings {
   updatedAt: string;
 }
 
+export interface StatisticItem {
+  id: string;
+  value: string;
+  prefix?: string;
+  suffix?: string;
+  title: string;
+  description?: string;
+  order: number;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface FaqItem {
   id: string;
   question: string;

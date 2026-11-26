@@ -269,6 +269,19 @@ export interface TrustedBrandsPayload {
   brands: TrustedBrand[];
 }
 
+export interface StatisticItem {
+  id: string;
+  value: string;
+  prefix?: string;
+  suffix?: string;
+  title: string;
+  description?: string;
+  order: number;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AdminUser {
   id: string;
   name: string;
@@ -290,6 +303,7 @@ export interface AnalyticsOverview {
     publishedBlogPosts: number;
     publishedTestimonials?: number;
     publishedTrustedBrands?: number;
+    publishedStatistics?: number;
   };
   serviceDistribution: {
     service: string;

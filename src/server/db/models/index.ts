@@ -13,7 +13,8 @@ import {
   TrackingConfig,
   Testimonial,
   TrustedBrand,
-  TrustedBrandsSectionSettings
+  TrustedBrandsSectionSettings,
+  StatisticItem
 } from '../../types/index.ts';
 
 // 1. Admin Users Schema
@@ -348,4 +349,27 @@ const TrustedBrandSettingsSchema = new Schema<TrustedBrandSettingsDocument>(
 export const TrustedBrandSettingsModel =
   mongoose.models.TrustedBrandSettings ||
   mongoose.model<TrustedBrandSettingsDocument>('TrustedBrandSettings', TrustedBrandSettingsSchema);
+
+// 15. Statistics / Achievement Section Schema
+export interface StatisticDocument extends Omit<StatisticItem, 'id'>, Document {
+  id: string;
+}
+const StatisticSchema = new Schema<StatisticDocument>(
+  {
+    id: { type: String, required: true, unique: true, index: true },
+    value: { type: String, required: true, trim: true },
+    prefix: { type: String, default: '' },
+    suffix: { type: String, default: '' },
+    title: { type: String, required: true, trim: true },
+    description: { type: String, default: '', trim: true },
+    order: { type: Number, default: 0, index: true },
+    isPublished: { type: Boolean, default: true, index: true },
+    createdAt: { type: String, default: () => new Date().toISOString() },
+    updatedAt: { type: String, default: () => new Date().toISOString() }
+  },
+  { collection: 'statistics', timestamps: false, versionKey: false }
+);
+export const StatisticModel =
+  mongoose.models.Statistic || mongoose.model<StatisticDocument>('Statistic', StatisticSchema);
+
 

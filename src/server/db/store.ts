@@ -17,7 +17,8 @@ import {
   AboutPageData,
   Testimonial,
   TrustedBrand,
-  TrustedBrandsSectionSettings
+  TrustedBrandsSectionSettings,
+  StatisticItem
 } from '../types/index.ts';
 import {
   UserModel,
@@ -33,7 +34,8 @@ import {
   TrackingModel,
   TestimonialModel,
   TrustedBrandModel,
-  TrustedBrandSettingsModel
+  TrustedBrandSettingsModel,
+  StatisticModel
 } from './models/index.ts';
 import { getDatabaseStatus } from './connection.ts';
 
@@ -938,11 +940,63 @@ const initialTrustedBrandsSeed: TrustedBrand[] = [
   }
 ];
 
+const initialStatisticsSeed: StatisticItem[] = [
+  {
+    id: 'stat_seed_1',
+    value: '99.9',
+    prefix: '',
+    suffix: '%',
+    title: 'Production Uptime Standard',
+    description: '',
+    order: 1,
+    isPublished: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 'stat_seed_2',
+    value: '700',
+    prefix: '< ',
+    suffix: 'ms',
+    title: 'Average Core Web Vitals FCP',
+    description: '',
+    order: 2,
+    isPublished: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 'stat_seed_3',
+    value: '4.2',
+    prefix: '',
+    suffix: 'x',
+    title: 'Client Pipeline Growth Multiple',
+    description: '',
+    order: 3,
+    isPublished: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 'stat_seed_4',
+    value: '45',
+    prefix: '$',
+    suffix: 'M+',
+    title: 'Client Revenue Transacted',
+    description: '',
+    order: 4,
+    isPublished: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+];
+
 // Initial Collections
 let adminUsersList: AdminUser[] = loadPersistedUsers();
 let testimonialsList: Testimonial[] = [];
 let trustedBrandsList: TrustedBrand[] = [...initialTrustedBrandsSeed];
 let trustedBrandsSettings: TrustedBrandsSectionSettings = { ...defaultTrustedBrandsSettings };
+let statisticsList: StatisticItem[] = [...initialStatisticsSeed];
 
 // Data Store Accessors
 export const db = {
@@ -1130,8 +1184,48 @@ export const db = {
       const mongoTrustedBrands = await TrustedBrandModel.find().sort({ displayOrder: 1, createdAt: 1 }).lean();
       trustedBrandsList = (mongoTrustedBrands || []) as any;
 
+      // Statistics CMS: seed initial 4 records ONLY on first initialization when empty (never duplicate)
+      const statsInitMarker = await SettingsModel.findOne({ docId: 'statistics_initialized' }).lean();
+      const statsCount = await StatisticModel.countDocuments();
+      if (!statsInitMarker && statsCount === 0) {
+        console.log('[store] Initializing Statistics CMS with 4 baseline metrics...');
+        for (const stat of initialStatisticsSeed) {
+          await StatisticModel.findOneAndUpdate(
+            { id: stat.id },
+            { $set: stat },
+            { upsert: true, returnDocument: 'after' }
+          );
+        }
+        await SettingsModel.findOneAndUpdate(
+          { docId: 'statistics_initialized' },
+          {
+            $set: {
+              docId: 'statistics_initialized',
+              data: { initialized: true },
+              updatedAt: new Date().toISOString()
+            }
+          },
+          { upsert: true, returnDocument: 'after' }
+        );
+      } else if (statsCount > 0 && !statsInitMarker) {
+        await SettingsModel.findOneAndUpdate(
+          { docId: 'statistics_initialized' },
+          {
+            $set: {
+              docId: 'statistics_initialized',
+              data: { initialized: true },
+              updatedAt: new Date().toISOString()
+            }
+          },
+          { upsert: true, returnDocument: 'after' }
+        );
+      }
+
+      const mongoStatistics = await StatisticModel.find().sort({ order: 1, createdAt: 1 }).lean();
+      statisticsList = (mongoStatistics || []) as any;
+
       console.log(
-        `[store] MongoDB state synchronized (${servicesList.length} services, ${projectsList.length} projects, ${testimonialsList.length} testimonials, ${trustedBrandsList.length} trusted brands, ${adminUsersList.length} users).`
+        `[store] MongoDB state synchronized (${servicesList.length} services, ${projectsList.length} projects, ${testimonialsList.length} testimonials, ${trustedBrandsList.length} trusted brands, ${statisticsList.length} statistics, ${adminUsersList.length} users).`
       );
     } catch (err: any) {
       console.error('[store] Error synchronizing with MongoDB:', err);
@@ -1419,6 +1513,100 @@ export const db = {
     await TrustedBrandModel.deleteOne({ id });
     trustedBrandsList.splice(index, 1);
     return true;
+  },
+
+  // Statistics / Achievements CMS (Dynamic & Persisted)
+  getStatistics: (includeUnpublished = false): StatisticItem[] => {
+    const list = includeUnpublished
+      ? [...statisticsList]
+      : statisticsList.filter(s => s.isPublished === true);
+    return list.sort((a, b) => {
+      const orderDiff = (a.order ?? 0) - (b.order ?? 0);
+      if (orderDiff !== 0) return orderDiff;
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
+  },
+  getStatisticById: (id: string): StatisticItem | undefined => {
+    return statisticsList.find(s => s.id === id);
+  },
+  createStatistic: async (
+    data: Omit<StatisticItem, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<StatisticItem> => {
+    const now = new Date().toISOString();
+    const newItem: StatisticItem = {
+      ...data,
+      id: `stat_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      createdAt: now,
+      updatedAt: now
+    };
+    await StatisticModel.create(newItem);
+    statisticsList.push(newItem);
+    return newItem;
+  },
+  updateStatistic: async (
+    id: string,
+    data: Partial<StatisticItem>
+  ): Promise<StatisticItem | null> => {
+    const index = statisticsList.findIndex(s => s.id === id);
+    if (index === -1) return null;
+    const updatedFields = {
+      ...data,
+      updatedAt: new Date().toISOString()
+    };
+    await StatisticModel.findOneAndUpdate(
+      { id },
+      { $set: updatedFields },
+      { returnDocument: 'after' }
+    );
+    statisticsList[index] = { ...statisticsList[index], ...updatedFields };
+    return statisticsList[index];
+  },
+  deleteStatistic: async (id: string): Promise<boolean> => {
+    const index = statisticsList.findIndex(s => s.id === id);
+    if (index === -1) return false;
+    await StatisticModel.deleteOne({ id });
+    statisticsList.splice(index, 1);
+    return true;
+  },
+  reorderStatistics: async (orderedIds: string[]): Promise<StatisticItem[]> => {
+    const now = new Date().toISOString();
+    const orderMap = new Map<string, number>();
+    let rank = 1;
+
+    for (const id of orderedIds) {
+      if (!orderMap.has(id) && statisticsList.some(s => s.id === id)) {
+        orderMap.set(id, rank++);
+      }
+    }
+
+    // Preserve any existing items not explicitly included in orderedIds after the ordered ones
+    const remaining = [...statisticsList]
+      .filter(s => !orderMap.has(s.id))
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    for (const item of remaining) {
+      orderMap.set(item.id, rank++);
+    }
+
+    const bulkOps = Array.from(orderMap.entries()).map(([id, order]) => ({
+      updateOne: {
+        filter: { id },
+        update: { $set: { order, updatedAt: now } }
+      }
+    }));
+
+    if (bulkOps.length > 0) {
+      await StatisticModel.bulkWrite(bulkOps);
+    }
+
+    statisticsList = statisticsList
+      .map(item =>
+        orderMap.has(item.id)
+          ? { ...item, order: orderMap.get(item.id)!, updatedAt: now }
+          : item
+      )
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+    return [...statisticsList];
   },
 
   // About Page CMS (Dynamic & Persisted)

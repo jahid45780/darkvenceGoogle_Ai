@@ -19,7 +19,8 @@ import {
   AdminUser,
   AboutPageData,
   Testimonial,
-  TrustedBrandsPayload
+  TrustedBrandsPayload,
+  StatisticItem
 } from './types/index.ts';
 
 import { Navbar } from './components/layout/Navbar.tsx';
@@ -54,6 +55,7 @@ import { AdminTrackingPage } from './pages/admin/AdminTrackingPage.tsx';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage.tsx';
 import { AdminTestimonialsPage } from './pages/admin/AdminTestimonialsPage.tsx';
 import { AdminTrustedBrandsPage } from './pages/admin/AdminTrustedBrandsPage.tsx';
+import { AdminStatisticsPage } from './pages/admin/AdminStatisticsPage.tsx';
 
 function MainApp() {
 
@@ -76,6 +78,9 @@ function MainApp() {
   const [trustedBrandsData, setTrustedBrandsData] = useState<TrustedBrandsPayload | null>(null);
   const [trustedBrandsLoading, setTrustedBrandsLoading] = useState<boolean>(true);
   const [trustedBrandsError, setTrustedBrandsError] = useState<string | null>(null);
+  const [statistics, setStatistics] = useState<StatisticItem[]>([]);
+  const [statisticsLoading, setStatisticsLoading] = useState<boolean>(true);
+  const [statisticsError, setStatisticsError] = useState<string | null>(null);
   const [dataLoading, setDataLoading] = useState<boolean>(true);
   const [showInitialLoader, setShowInitialLoader] = useState<boolean>(() => {
     try {
@@ -92,6 +97,9 @@ function MainApp() {
   const [adminInquiries, setAdminInquiries] = useState<InquiryItem[]>([]);
   const [adminTestimonials, setAdminTestimonials] = useState<Testimonial[]>([]);
   const [adminTrustedBrandsData, setAdminTrustedBrandsData] = useState<TrustedBrandsPayload | null>(null);
+  const [adminStatistics, setAdminStatistics] = useState<StatisticItem[]>([]);
+  const [adminStatisticsLoading, setAdminStatisticsLoading] = useState<boolean>(false);
+  const [adminStatisticsError, setAdminStatisticsError] = useState<string | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsOverview | null>(null);
   const [mediaList, setMediaList] = useState<MediaItem[]>([]);
   const [healthStatus, setHealthStatus] = useState<HealthStatus | null>(null);
@@ -130,6 +138,21 @@ function MainApp() {
     }
   };
 
+  const fetchStatistics = async () => {
+    try {
+      setStatisticsLoading(true);
+      setStatisticsError(null);
+      const list = await api.getPublicStatistics();
+      setStatistics(Array.isArray(list) ? list : []);
+    } catch (err: any) {
+      console.error('[Failed to fetch statistics]:', err);
+      setStatisticsError(err?.message || 'Unable to load performance statistics.');
+      setStatistics([]);
+    } finally {
+      setStatisticsLoading(false);
+    }
+  };
+
   // Initial public data fetch
   const fetchPublicData = async () => {
     try {
@@ -141,7 +164,8 @@ function MainApp() {
         api.getSettings().catch(() => undefined),
         api.getAbout().catch(() => undefined),
         fetchTestimonials(),
-        fetchTrustedBrands()
+        fetchTrustedBrands(),
+        fetchStatistics()
       ]);
       setServices(s || []);
       setProjects(p || []);
@@ -159,8 +183,10 @@ function MainApp() {
   // Admin data fetch
   const fetchAdminData = async () => {
     if (!isAuthenticated) return;
+    setAdminStatisticsLoading(true);
+    setAdminStatisticsError(null);
     try {
-      const [an, s, p, b, inq, tst, tb, med, hlt, seo, perf, trk, usr] = await Promise.all([
+      const [an, s, p, b, inq, tst, tb, st, med, hlt, seo, perf, trk, usr] = await Promise.all([
         api.getAdminAnalytics(),
         api.getAdminServices(),
         api.getAdminProjects(),
@@ -168,6 +194,10 @@ function MainApp() {
         api.getAdminInquiries(),
         api.getAdminTestimonials(),
         api.getAdminTrustedBrands(),
+        api.getAdminStatistics().catch((statErr: any) => {
+          setAdminStatisticsError(statErr?.message || 'Unable to load statistics.');
+          return [];
+        }),
         api.getMedia(),
         api.getHealth(),
         api.getSeo(),
@@ -182,6 +212,7 @@ function MainApp() {
       setAdminInquiries(inq || []);
       setAdminTestimonials(tst || []);
       setAdminTrustedBrandsData(tb || null);
+      setAdminStatistics(Array.isArray(st) ? st : []);
       setMediaList(med || []);
       setHealthStatus(hlt);
       setSeoData(seo);
@@ -190,6 +221,8 @@ function MainApp() {
       setAdminUsers(usr || []);
     } catch (err) {
       console.error('[Failed to fetch admin data]:', err);
+    } finally {
+      setAdminStatisticsLoading(false);
     }
   };
 
@@ -278,6 +311,17 @@ function MainApp() {
             onRefresh={() => {
               fetchAdminData();
               fetchTrustedBrands();
+            }}
+          />
+        )}
+        {adminTab === 'statistics' && (
+          <AdminStatisticsPage
+            statistics={adminStatistics}
+            isLoading={adminStatisticsLoading}
+            loadError={adminStatisticsError}
+            onRefresh={() => {
+              fetchAdminData();
+              fetchStatistics();
             }}
           />
         )}
@@ -380,6 +424,10 @@ function MainApp() {
                 trustedBrandsLoading={trustedBrandsLoading}
                 trustedBrandsError={trustedBrandsError}
                 onRetryTrustedBrands={fetchTrustedBrands}
+                statistics={statistics}
+                statisticsLoading={statisticsLoading}
+                statisticsError={statisticsError}
+                onRetryStatistics={fetchStatistics}
                 onNavigate={handleNavigate}
               />
             )}
